@@ -1,0 +1,2 @@
+#Make sure the .bak files are interpreted as Liberty Basic
+*.bak linguist-language=Liberty-Basic
