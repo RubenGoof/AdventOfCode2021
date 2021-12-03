@@ -1,9 +1,10 @@
 'It is a good thing to note that I am definitely not proud of this.
 'Just that Liberty Basic lacks binary numbers, lists, len(array) etc
 'Enjoy the pain I went through :)
-global fileSize
-global currentValidBitOxygen
-global currentValidBitCO2
+global fileSize 'Number of lines left currently in the remaining list. Kinda hackily used tho.
+global currentValidBitOxygen 'needed because of function scopes
+global currentValidBitCO2 'needed because of function scopes
+global txtSize 'line size for computing to binary.
 fileSize = 0
 txtSize = 0 'We do assume the length for each is equal
 ones = 0
@@ -31,7 +32,7 @@ while eof(#in) = 0
 wend
 close #in 'close file for now
 
-print "fileSize: "; fileSize
+
 DIM content$(fileSize)
 
 open fileName$ for input as #in2 'open file
@@ -86,7 +87,6 @@ position = 2
 [oxygenloop]
 for i = 1 to (index1-1)
     value = val(right$(left$(resultingArrayOxygen$(i), position), 1))
-    print "resultingArrayOxygen$(i): "; resultingArrayOxygen$(i)
     if value = 1 then
         ones = ones + 1
     else
@@ -95,10 +95,6 @@ for i = 1 to (index1-1)
 
     tempArray$(i) = resultingArrayOxygen$(i)
 next i
-
-print "copied to tempArray$!"
-print "ones: "; ones
-print "zeroes: "; zeroes
 
 
 if ones >= zeroes then
@@ -110,13 +106,9 @@ else
 end if
 
 fileSize = index1-1
-print "Reset resultingArrayOxygen!"
-print "new fileSize: "; fileSize
-
 index1 = 1
 for i = 1 to fileSize
     value = val(right$(left$(tempArray$(i), position), 1))
-    print "1: "; tempArray$(i)
     if value = currentValidBitOxygen then
         resultingArrayOxygen$(index1) = tempArray$(i)
         index1 = index1 + 1
@@ -143,7 +135,6 @@ position = 2
 [CO2loop]
 for i = 1 to (index2-1)
     value = val(right$(left$(resultingArrayCO2$(i), position), 1))
-    print "resultingArrayCO2$(i): "; resultingArrayCO2$(i)
     if value = 1 then
         ones = ones + 1
     else
@@ -152,10 +143,6 @@ for i = 1 to (index2-1)
 
     tempArray$(i) = resultingArrayCO2$(i)
 next i
-
-print "copied to tempArray$!"
-print "ones: "; ones
-print "zeroes: "; zeroes
 
 
 if ones >= zeroes then
@@ -167,13 +154,10 @@ else
 end if
 
 fileSize = index2-1
-print "Reset resultingArrayOxygen!"
-print "new fileSize: "; fileSize
 
 index2 = 1
 for i = 1 to fileSize
     value = val(right$(left$(tempArray$(i), position), 1))
-    print "1: "; tempArray$(i)
     if value = currentValidBitCO2 then
         resultingArrayCO2$(index2) = tempArray$(i)
         index2 = index2 + 1
@@ -190,20 +174,27 @@ if (index2-1) <> 1 then goto [CO2loop]
 print "RESULT2!!!!"; resultingArrayCO2$(1)
 
 'Now we translate it to a number instead of bits
-oxygenNum = 0
-CO2Num = 0
-for i = 1 to len(resultingArrayCO2$(1)) 'loop through the current line
-    value = val(right$(left$(resultingArrayCO2$(1), i), 1))
-    if value = 1 then
-         CO2Num = CO2Num + 2^(len(txt$)-i)
-    end if
-    value = val(right$(left$(resultingArrayOxygen$(1), i), 1))
-    if value = 1 then
-        oxygenNum = oxygenNum + 2^(len(txt$)-i)
-    end if
-next i
+oxygenNum = binaryStringToNumber(resultingArrayOxygen$(1))
+CO2Num = binaryStringToNumber(resultingArrayCO2$(1))
 
 print "Final result is:"; (oxygenNum*CO2Num)
+
+
+function binaryStringToNumber(num$)
+result = 0
+for i = 1 to txtSize 'loop through the current line
+    value = val(right$(left$(num$, i), 1))
+    if value = 1 then
+         result = result + 2^(txtSize-i)
+    end if
+next i
+print result
+binaryStringToNumber = result
+end function
+
+sub findValue byref index, byref resultingArray$
+
+end sub
 
 
 
