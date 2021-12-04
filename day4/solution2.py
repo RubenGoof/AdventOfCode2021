@@ -16,13 +16,11 @@ def read_cards(strIn):
                 current_card = []
             # here we read a line into our current bingo card
             else:
-                # x = list(map(int, line.split()))
                 current_card.append(list(map(int, line.split())))
         cards.append(current_card)  # at eof
     return cards
 
 def checkBingo(x):
-    print(x)
     for i in range(5):
         if not np.count_nonzero(x[:,i] != -1) or not np.count_nonzero(x[i] != -1):
             return True
@@ -32,10 +30,8 @@ def calculateBingoSum(array, number):
     return np.sum(array, where=(array!=-1))*number
 
 def iterateNumbers(bingoArray):
-    iterations = 0
     for number in nums:
         bingoArray = np.where(bingoArray == number, -1, bingoArray)
-        # bingoArray = np.where(not checkBingo(bingoArray), bingoArray)
         prev = bingoArray.copy()
         bingoArray = np.array([x for x in bingoArray if not checkBingo(x)])
         if bingoArray.shape[0] == 0:
