@@ -17,17 +17,12 @@ while eof(#in) = 0
 wend
 close #in
 
-'Now, we create our data structure:
-'Honestly it pains me to do this; but this language does not offer hashmaps.
-'So we will have to suffer n^2 later on
-'A solution would be to keep a second maxX x 2 and maxY x 2 array with all the points that have been covered,
-'and use those as keys. The size of this is the sum of the distance of all lines and we would have to count it, though.
 DIM world(maxX, maxY)
+
 
 print "Create a world! We have this many lines: "; numberOfLines
 print "And our maxX is "; maxX; " and our maxY is "; maxY
 
-'And we fill them...
 open fileName$ for input as #in2
 while eof(#in2) = 0
     line input #in2, txt$
@@ -37,7 +32,6 @@ while eof(#in2) = 0
     secondY = val(word$(word$(txt$, 2, " -> "), 2, ","))
     stepSizeX = 1
     stepSizeY = 1
-    'Only consider horizontal and vertical lines!
 
     if firstX > secondX then stepSizeX = -1
     if firstY > secondY then stepSizeY = -1
@@ -70,7 +64,6 @@ while eof(#in2) = 0
 wend
 close #in2
 
-'And nowww we loop through the whole thing. Sorry, really.
 sum = 0
 for y = 0 to maxY
     prt$ = ""
