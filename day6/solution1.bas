@@ -1,6 +1,6 @@
 
 fileName$ = "data.txt"
-days = 80
+days = 256
 'First count the number of lines we have
 open fileName$ for input as #in
 line input #in, txt$
@@ -13,6 +13,7 @@ goto [countLength]
 
 [finishedLength]
 i=i-1
+DIM countedfish(i, days)
 print "There are this many fish at the start: "; i
 close #in
 
@@ -38,11 +39,21 @@ function countFish(n, t)
     end if
 
     if n = 0 and t <> 0 then
-        c = c + countFish(8, t-1)
-        c = c + countFish(6, t-1)
+        if countedfish(n, t) = 0 then
+            c = c + countFish(8, t-1)
+            c = c + countFish(6, t-1)
+            countedfish(n,t) = c
+        else
+            c = countedfish(n,t)
+        end if
     else
         if t <> 0 then
-            c = countFish(n-1, t-1) 'we dont use a
+            if countedfish(n-1, t-1) = 0 then
+                c = countFish(n-1, t-1) 'we dont use a
+                countedfish(n-1, t-1) = c
+            else
+                c = countedfish(n-1,t-1)
+            end if
         end if
     end if
     countFish = c
